@@ -7,65 +7,107 @@ import java.io.IOException;
 
 /**
  * This Class implements the text analyzer logic
+ * 
  * @author nanak
- *
  */
 public class TextAnalyzer {
-	private int lines;
-	private int sentences;
-	private int words;
-	private int avgwlength;
 	private String line;
-	private String text;
-	
-	
+	private int lineCount;
+	private int sentenceCount;
+	private int wordCount;
+	private int charCount;
+	private int avrgWLength;
+
 	/**
 	 * This Method counts the sentences in a specified line
-	 * @param line The line in which sentences will be counted
+	 * 
+	 * @param line
+	 *            The line in which sentences will be counted
 	 */
-	public void countSentences(String line){
+	public int countSentences(String line) {
 		String[] sentences = line.split("[\\!\\.\\?]");
-		this.sentences = sentences.length;
+		int sentenceCount = sentences.length;
+		return sentenceCount;
 	}
-	
+
 	/**
 	 * This Method counts the words in a specified line
-	 * @param line The line in which words will be counted
+	 * 
+	 * @param line
+	 *            The line in which words will be counted
 	 */
-	public void countWords(String line){
-		String[] words = line.split(" ");
-		this.words = words.length;
+	public int countWords(String line) {
+		String[] words = line.split("\\s+");
+		int wordCount = words.length;
+		return wordCount;
 	}
-	
+
 	/**
-	 * Ths Method calculates the average word length
-	 * @param line The line in which the average length sould be calculated
+	 * This Method calculates the average word length
+	 * 
+	 * @param line
+	 *            The line in which the average length should be calculated
 	 */
-	public void avgWLength(String line){
-		//TODO implement logic
+	public int countChars(String line) {
+		return line.length();
 	}
-	
-	/**
-	 * Reads a File and analyzes it
-	 * @param path
-	 * @throws FileNotFoundException
-	 */
-	public void readFile(String path) throws FileNotFoundException{
+
+	public void writeFileToStdOut(String path, int newLineLength)
+			throws FileNotFoundException {
 		FileReader fr = new FileReader(path);
 		BufferedReader br = new BufferedReader(fr);
-		try{
-			line = null;
-			while ((line = br.readLine()) != null){
-				this.lines += 1;
-				countSentences(line);
-				countWords(line);
-				avgWLength(line);
+		String longline = "";
+		String newline = "";
+		String[] chars = null;
+		line = "";
+		int i = 0;
+		try {
+			while ((line = br.readLine()) != null) {
+				longline += line;
 			}
-		}
-		catch(IOException ioe){
+			chars = longline.split("(?!^)");
+			int j = 0;
+			while (i < (longline.length()/newLineLength)){
+				while (newline.length() < newLineLength && newline.length() < chars.length) {
+					newline += chars[j];
+					j++;
+				}
+				System.out.println(newline);
+				newline = "";
+				i++;
+			}
+		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
 	}
-	
-	
+
+	/**
+	 * Reads a File and analyzes it
+	 * 
+	 * @param path
+	 *            Path to the text file which should be analyzed
+	 * @throws FileNotFoundException
+	 */
+	public void readAnalyzeFile(String path, int newLineLength)
+			throws FileNotFoundException {
+		FileReader fr = new FileReader(path);
+		BufferedReader br = new BufferedReader(fr);
+		try {
+			line = null;
+			while ((line = br.readLine()) != null) {
+				lineCount += 1;
+				sentenceCount += countSentences(line);
+				wordCount += countWords(line);
+				charCount += countChars(line);
+			}
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+		avrgWLength = charCount / wordCount;
+		writeFileToStdOut(path, newLineLength);
+		System.out.println("\n\nlines: " + lineCount + ", sentences: "
+				+ sentenceCount + ", words: " + wordCount + ", characters: "
+				+ charCount + ", average word length: " + avrgWLength);
+	}
+
 }
