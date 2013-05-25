@@ -18,6 +18,7 @@ public class TextAnalyzer {
 	private String line;
 	private String text;
 	
+	
 	/**
 	 * This Method counts the sentences in a specified line
 	 * @param line The line in which sentences will be counted
@@ -41,7 +42,7 @@ public class TextAnalyzer {
 	 * @param line The line in which the average length sould be calculated
 	 */
 	public void avgWLength(String line){
-		
+		//TODO implement logic
 	}
 	
 	/**
@@ -62,7 +63,7 @@ public class TextAnalyzer {
 			}
 		}
 		catch(IOException ioe){
-//			ioe.printStrackTrace();
+			ioe.printStackTrace();
 		}
 	}
 	
